@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<head>
+    <title>Self-driving car - No libraries</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="carCanvas"></canvas>
+    
+    <div id="mapIcons">
+        <button onclick="openNavigationPanel()">📍</button>
+    </div>
+    <div id="navigationPanel" style="display:none; background-color: white; padding: 50px; ">
+      <ul id="navigationDataContainer">
+         <h1 style="font-size:300%;">歡迎光臨國立雲林科技大學</h1>
+         <h3>
+            <li><a href="">請選擇目的地</a></li>
+            <li><a href="">工程學院</a></li>
+            <li><a href="">管理學院</a></li>
+            <li><a href="">人文學院</a></li>
+            <li><a href="">設計學院</a></li>
+            <li><a href="">未來學院</a></li>
+            <li><a href="">宿舍</a></li>
+            <li><a href="">體育館</a></li>
+            <li><a href="">學生活動中心</a></li>
+            <li><a href="">行政與資訊中心</a></li>
+         </h3>
+        
+        <button onclick="closeNavigationPanel()" style="position: absolute; bottom: 10px; right: 10%;">❌</button>
+      
+   </div>
+      </ul>
+      
+      
+    <div id="mapContainer">
+        <canvas id="miniMapCanvas"></canvas>
+        
+    </div>
+    
+    <!-- <canvas id="networkCanvas"></canvas> -->
+    
+   
+    <script src="world/js/world.js"></script>
+    <script src="world/js/viewport.js"></script>
+    <script src="world/js/markings/marking.js"></script>
+    <script src="world/js/markings/stop.js"></script>
+    <script src="world/js/markings/start.js"></script>
+    <script src="world/js/markings/crossing.js"></script>
+    <script src="world/js/markings/parking.js"></script>
+    <script src="world/js/markings/light.js"></script>
+    <script src="world/js/markings/target.js"></script>
+    <script src="world/js/markings/yield.js"></script>
+    <script src="world/js/editors/markingEditor.js"></script>
+    <script src="world/js/editors/graphEditor.js"></script>
+    <script src="world/js/editors/crossingEditor.js"></script>
+    <script src="world/js/editors/stopEditor.js"></script>
+    <script src="world/js/editors/startEditor.js"></script>
+    <script src="world/js/editors/parkingEditor.js"></script>
+    <script src="world/js/editors/lightEditor.js"></script>
+    <script src="world/js/editors/targetEditor.js"></script>
+    <script src="world/js/editors/yieldEditor.js"></script>
+    <script src="world/js/items/tree.js"></script>
+    <script src="world/js/items/building.js"></script>
+    <script src="world/js/math/utils.js"></script>
+    <script src="world/js/math/graph.js"></script>
+    <script src="world/js/primitives/point.js"></script>
+    <script src="world/js/primitives/segment.js"></script>
+    <script src="world/js/primitives/polygon.js"></script>
+    <script src="world/js/primitives/envelope.js"></script>
+
+    <!-- <script src="world/saves/big.world"></script> -->
+
+    
+    <!-- <script src="world/saves/big_with_target.world"></script> -->
+    <script src="world/saves/manymanyTarget.world"></script>
+    <!-- <script src="world/saves/工院.world"></script> -->
+    <!-- <script src="world/saves/管院.world"></script> -->
+    <!-- <script src="world/saves/人文學院.world"></script> -->
+    <!-- <script src="world/saves/設計學院.world"></script> -->
+    <!-- <script src="world/saves/未來學院.world"></script> -->
+    <!-- <script src="world/saves/宿舍.world"></script> -->
+    <!-- <script src="world/saves/體育館.world"></script> -->
+    <!-- <script src="world/saves/學生活動中心.world"></script> -->
+    <!-- <script src="world/saves/行政與資訊中心.world"></script> -->
+    
+    <!-- <script src="world/saves/try.world"></script> -->
+    <!-- <script src="world/saves/many_targets_small.world"></script> -->
+    <!-- <script src="world/saves/test.world"></script> -->
+    <script src="saves/right_hand_rule.car"></script>
+
+    <script src="miniMap.js"></script>
+    <!-- <script src="navigation.js"></script> -->
+    <script src="visualizer.js"></script>
+    <script src="network.js"></script>
+    <script src="sensor.js"></script>
+    <script src="utils.js"></script>
+    <script src="controls.js"></script>
+    <script src="car.js"></script>
+    <script src="main.js"></script>
+    <script>
+        function openNavigationPanel() {
+            navigationPanel.style.display = "block";
+         }
+
+         function closeNavigationPanel() {
+            navigationPanel.style.display = "none";
+         }
+
+         function parseNavigationData() {
+            if (navigationDataContainer.value == "") {
+               alert("Paste data first");
+               return;
+            }
+            
+            closeNavigationPanel();
+         }
+    </script>
+    
+    <button id="manualBtn" title="Manual Override" onclick="toggleManual()" style="display: block; background-color: rgb(235, 238, 245);">
+      🛞
+     </button>
+     <script defer="">
+        
+
+     </script>
+    <script>
+        let manual = localStorage.getItem("manual") == "true";
+         if (optimizing) {
+            manualBtn.style.display = "none";
+         }
+         else{
+            manualBtn.style.display = "block";
+         }
+         function selectCar(index) {
+            bestCar = cars[index];
+            viewport.flyTo(bestCar, true);
+            bestCar.resetControls();
+            goingToSelect.value = bestCar.destination.name;
+            manual = !bestCar.useBrain;
+            manualBtn.style.backgroundColor = manual ? "blue" : "rgba(0,0,0,0)";
+         }
+         function toggleManual() {
+            manual = !manual;
+            localStorage.setItem("manual", manual);
+            bestCar.useBrain = !manual;
+            bestCar.controls.forward = false;
+            bestCar.controls.left = false;
+            bestCar.controls.right = false;
+            bestCar.controls.reverse = false;
+            if (manual) {
+               goToPanel.style.pointerEvents = "none";
+               goToPanel.style.opacity = 0.5;
+               bestCar.resetControls();
+               
+               if(!defaultOptions.applyShortestPath){
+                  bestCar.assignedBorders = [];
+                  bestCar.shortestPath = [];
+               }
+               
+               try {
+               miniMap.destination = null;
+               } catch (err) {}
+            } else {
+               try {
+                  //changeTarget(goingToSelect);
+                  goToPanel.style.pointerEvents = "";
+                  goToPanel.style.opacity = 1;
+               } catch (err) {}
+            }
+            manualBtn.style.backgroundColor = manual ? "#05F" : "white";
+         }
+
+         if (!optimizing) {
+               manual = !manual;
+               toggleManual();
+            } else {
+               manual = false;
+            }
+
+    </script>
+</body>
+</html>

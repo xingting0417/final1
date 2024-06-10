@@ -1,0 +1,95 @@
+body{
+    margin:0;
+    background:rgb(137, 135, 135);
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+#verticalButtons{
+    display:flex;
+    flex-direction:column;
+}
+
+
+button {
+    display: inline-block;
+    background-color: white;
+    font-size: 50px;
+    padding: 5px 7px 7px 5px;
+    border: none;
+    border-radius: 50px;
+    text-shadow: 1px 1px black;
+    cursor: pointer;
+ }
+
+#miniMapCanvas{
+    /* background: black; */
+    background-color: rgba(0, 0, 0, 0.9);
+    border-radius: 50%;
+}
+
+#networkCanvas{
+    background:black;
+    display: none;
+}
+
+#mapContainer {
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    
+}
+
+#mapIcons {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 35px; /* 設置按鈕寬度為100像素 */
+    height: 50px; /* 設置按鈕高度為50像素 */
+}
+
+#carCanvas{
+    background:rgb(111, 114, 112);
+    width: 100%;
+    height: 100%;
+}
+
+button{
+    display: inline-block;
+    background-color: white;
+    font-size: 30px;
+    padding: 5px 7px 7px 5px;
+    border: none;
+    border-radius: 10px;
+    text-shadow: 1px 1px black;
+    cursor: pointer;
+}
+
+#navigationPanel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(0, 0, 0, 0.7);
+    padding: 3000px;
+ }
+
+ #manualBtn{
+    position: absolute;
+    top:55px;
+    left:0px;
+    width: 53px; /* 設置按鈕寬度為100像素 */
+    height: 53px; /* 設置按鈕高度為50像素 */
+  /* background-color: rgb(0, 85, 255); */
+    display: block;
+
+
+}
+
+#manualBtn:active {
+    background-color: #545256; /* 點擊時變成白色 */
+    color: rgb(126, 128, 133); /* 文字顏色為藍色 */
+}
